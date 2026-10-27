@@ -2,8 +2,26 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>RELY</title>
-<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Font loaded locally – see assets/fonts/ -->
 <style>
+    @font-face {
+      font-family: "Pixelify Sans";
+      src: url("file:///android_asset/fonts/PixelifySans-Regular.woff2") format("woff2");
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Pixelify Sans";
+      src: url("file:///android_asset/fonts/PixelifySans-SemiBold.woff2") format("woff2");
+      font-weight: 600;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Pixelify Sans";
+      src: url("file:///android_asset/fonts/PixelifySans-Bold.woff2") format("woff2");
+      font-weight: 700;
+      font-display: swap;
+    }
 @property --a{syntax:'<length>';inherits:false;initial-value:4px}
 :root{--bg:#ececec;--s1:#dcdcdc;--s2:#c2c2c2;--fg:#0d0d0d;--mu:#666;--e:cubic-bezier(.22,1,.36,1);--sp:cubic-bezier(.34,1.56,.64,1);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0b0b;--s1:#181818;--s2:#2d2d2d;--fg:#f0f0f0;--mu:#8e8e8e;color-scheme:dark}}
@@ -232,5 +250,27 @@ addEventListener('resize',()=>{bb();pt(ps())});
 $('nav').innerHTML=[['h','home','Home'],['s','search','Explore'],['l','lib','Library']].map(([v,i,l])=>`<button data-v="${v}"><span class="ind px">${ic(i,3)}</span>${l}</button>`).join('');
 $('#tb').innerHTML=ic('half',2);$('#cl').innerHTML=ic('chev',2);$('#pv').innerHTML=ic('prev',3);$('#nx').innerHTML=ic('next',3);
 go(0,0,0);rn();bar();
+
+    /* ── Android bridge helpers (injected by rely-build.sh) ── */
+    window.pickTrack = function() {
+      if (window.Android) Android.pickAudioFile();
+    };
+
+    window.onFilePicked = function(uri, name) {
+      var title = name.replace(/\.[^.]+$/, "");
+      if (window.Android) Android.play(uri, title, "RELY");
+      if (typeof loadTrack === "function") loadTrack({ uri: uri, title: title, artist: "RELY" });
+    };
+
+    /* Keep screen awake when Now Playing opens */
+    var npSection = document.getElementById("np");
+    if (npSection) {
+      var obs = new MutationObserver(function() {
+        var open = npSection.classList.contains("open") || npSection.dataset.tab === "1";
+        if (window.Android) Android.keepScreenOn(open);
+      });
+      obs.observe(npSection, { attributes: true, attributeFilter: ["class","data-tab"] });
+    }
+
 </script>
 </body></html>
