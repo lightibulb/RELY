@@ -2,15 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Network (font fallback, future streaming) -->
+    <!-- Network for font fallback / future streaming -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Local audio library -->
+    <!-- Local audio access -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
-    <!-- Foreground playback service -->
+    <!-- Foreground playback -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -21,13 +22,12 @@
     <application
         android:label="RELY"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
         tools:targetApi="34">
 
-        <!-- Main WebView activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -40,7 +40,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Background playback service -->
         <service
             android:name=".PlaybackService"
             android:exported="false"
